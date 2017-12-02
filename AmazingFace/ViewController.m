@@ -85,6 +85,7 @@
     
     // Create a session configuration
     ARWorldTrackingConfiguration *configuration = [ARWorldTrackingConfiguration new];
+    
     //[configuration set]
 
     // Run the view's session
@@ -135,6 +136,7 @@
     CVPixelBufferRef cpbr = [frame capturedImage];
     
     CIImage *ciImage = [CIImage imageWithCVPixelBuffer:cpbr];
+    [ciImage imageTransformForOrientation:90];
     
     CIContext *temporaryContext = [CIContext contextWithOptions:nil];
     CGImageRef videoImage = [temporaryContext

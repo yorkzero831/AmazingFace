@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9863A9A11FD238400032B9E9 /* CIImage+MAT.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9863A9A01FD238400032B9E9 /* CIImage+MAT.mm */; };
 		98A27E051FD187270004764F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A27E041FD187270004764F /* AppDelegate.m */; };
 		98A27E071FD187270004764F /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 98A27E061FD187270004764F /* art.scnassets */; };
 		98A27E0A1FD187270004764F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A27E091FD187270004764F /* ViewController.m */; };
@@ -17,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9863A99F1FD238400032B9E9 /* CIImage+MAT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CIImage+MAT.h"; sourceTree = "<group>"; };
+		9863A9A01FD238400032B9E9 /* CIImage+MAT.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "CIImage+MAT.mm"; sourceTree = "<group>"; };
 		98A27E001FD187270004764F /* AmazingFace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmazingFace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98A27E031FD187270004764F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		98A27E041FD187270004764F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -41,6 +44,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9863A99E1FD237F80032B9E9 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				9863A99F1FD238400032B9E9 /* CIImage+MAT.h */,
+				9863A9A01FD238400032B9E9 /* CIImage+MAT.mm */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
 		98A27DF71FD187270004764F = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +72,7 @@
 		98A27E021FD187270004764F /* AmazingFace */ = {
 			isa = PBXGroup;
 			children = (
+				9863A99E1FD237F80032B9E9 /* Tools */,
 				98A27E031FD187270004764F /* AppDelegate.h */,
 				98A27E041FD187270004764F /* AppDelegate.m */,
 				98A27E061FD187270004764F /* art.scnassets */,
@@ -146,6 +159,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9863A9A11FD238400032B9E9 /* CIImage+MAT.mm in Sources */,
 				98A27E0A1FD187270004764F /* ViewController.m in Sources */,
 				98A27E151FD187270004764F /* main.m in Sources */,
 				98A27E051FD187270004764F /* AppDelegate.m in Sources */,
