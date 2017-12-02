@@ -7,6 +7,10 @@
 //
 
 #import "ViewController.h"
+#import "HeadPoseDetector.h"
+
+#define clamp(a) (a>255?255:(a<0?0:a))
+
 
 @interface ViewController () <ARSCNViewDelegate, ARSessionDelegate>
 
@@ -15,10 +19,14 @@
 @end
 
     
-@implementation ViewController
+@implementation ViewController {
+    HeadPoseDetector *headPosdetector;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    headPosdetector = [[HeadPoseDetector alloc] init];
 
     // Set the view's delegate
     self.sceneView.delegate = self;
@@ -133,20 +141,58 @@
 }
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
-    CVPixelBufferRef cpbr = [frame capturedImage];
+    CVPixelBufferRef buffer = [frame capturedImage];
     
-    CIImage *ciImage = [CIImage imageWithCVPixelBuffer:cpbr];
-    [ciImage imageTransformForOrientation:90];
+    CVPixelBufferLockBaseAddress(buffer, 0);
+    // it has two plane of yuv and cbcr
+    if (CVPixelBufferGetPlaneCount(buffer) < 2) {
+        return;
+    }
     
-    CIContext *temporaryContext = [CIContext contextWithOptions:nil];
-    CGImageRef videoImage = [temporaryContext
-                             createCGImage:ciImage
-                             fromRect:CGRectMake(0, 0,
-                                                 CVPixelBufferGetWidth(cpbr),
-                                                 CVPixelBufferGetHeight(cpbr))];
+    size_t width = CVPixelBufferGetWidth(buffer);
+    size_t height = CVPixelBufferGetHeight(buffer);
     
-    UIImage *uiImage = [UIImage imageWithCGImage:videoImage];
-    CGImageRelease(videoImage);
+    uint8_t *yBuffer = CVPixelBufferGetBaseAddressOfPlane(buffer, 0);
+    size_t yPitch = CVPixelBufferGetBytesPerRowOfPlane(buffer, 0);
+    
+    uint8_t *cbCrBuffer = CVPixelBufferGetBaseAddressOfPlane(buffer, 1);
+    size_t cbCrPitch = CVPixelBufferGetBytesPerRowOfPlane(buffer, 1);
+    
+    
+    int bytesPerPixel = 4;
+    uint8_t *rgbBuffer = malloc(height * width * bytesPerPixel);
+    
+    for(int yy = 0; yy < height; yy++) {
+        
+        uint8_t *yBufferLine = &yBuffer[yy * yPitch];
+        uint8_t *cbCrBufferLine = &cbCrBuffer[(yy >> 1) * cbCrPitch];
+        
+        for(int x = 0; x < width -1; x++) {
+            int16_t y = yBufferLine[x];
+            int16_t cb = cbCrBufferLine[x & ~1] - 128;
+            int16_t cr = cbCrBufferLine[x | 1] - 128;
+            
+            uint8_t *rgbOutput = &rgbBuffer[ ( (x + 1) * height - yy ) * bytesPerPixel];
+            
+            int16_t r = (int16_t)roundf( y + cr *  1.4 );
+            int16_t g = (int16_t)roundf( y + cb * -0.343 + cr * -0.711 );
+            int16_t b = (int16_t)roundf( y + cb *  1.765);
+            
+            rgbOutput[0] = 0xff;
+            rgbOutput[1] = clamp(b);
+            rgbOutput[2] = clamp(g);
+            rgbOutput[3] = clamp(r);
+
+        }
+    }
+    
+    //[headPosdetector doWorkOnPixelBuffer:rgbBuffer Heigth:height Width:width BytePerRow:cbCrPitch];
+    free(rgbBuffer);
+
+    
+    CVPixelBufferUnlockBaseAddress(buffer, 0);
+    
 }
+
 
 @end

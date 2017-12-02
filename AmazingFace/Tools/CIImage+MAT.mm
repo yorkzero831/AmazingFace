@@ -10,7 +10,10 @@
 
 @implementation CIImage_MAT
 
-+ (cv::Mat)matFromPixelBuffer:(CVPixelBufferRef)buffer
+using namespace::cv;
+
+
++ (Mat)matFromPixelBuffer:(CVPixelBufferRef)buffer
 {
     CVPixelBufferLockBaseAddress(buffer, 0);
     
@@ -20,7 +23,7 @@
     size_t stride = CVPixelBufferGetBytesPerRow( buffer );
     OSType type =  CVPixelBufferGetPixelFormatType(buffer);
     size_t extendedWidth = stride / 4;  // each pixel is 4 bytes/32 bits
-    cv::Mat bgraImage = cv::Mat( (int)height, (int)extendedWidth, CV_8UC4, base );
+    Mat bgraImage = Mat( (int)height, (int)extendedWidth, CV_8UC4, base );
     
     CVPixelBufferUnlockBaseAddress(buffer,0);
     

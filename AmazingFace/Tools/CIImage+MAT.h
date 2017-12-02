@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreVideo/CoreVideo.h>
+#include <dlib/opencv.h>
 
 @interface CIImage_MAT : NSObject
 
