@@ -7,13 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9863A9A11FD238400032B9E9 /* CIImage+MAT.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9863A9A01FD238400032B9E9 /* CIImage+MAT.mm */; };
-		9863A9A51FD2397A0032B9E9 /* libdlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9863A9A31FD2397A0032B9E9 /* libdlib.a */; };
 		9863A9A61FD2397A0032B9E9 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9863A9A41FD2397A0032B9E9 /* opencv2.framework */; };
 		9863A9AA1FD239900032B9E9 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9863A9A91FD2398A0032B9E9 /* CoreVideo.framework */; };
-		9863A9AC1FD23AB30032B9E9 /* shape_predictor_68_face_landmarks.dat in Resources */ = {isa = PBXBuildFile; fileRef = 9863A9AB1FD23AB30032B9E9 /* shape_predictor_68_face_landmarks.dat */; };
 		9863A9B21FD23EE80032B9E9 /* HeadPoseDetector.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9863A9B11FD23EE80032B9E9 /* HeadPoseDetector.mm */; };
 		9863A9B31FD2AE990032B9E9 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9863A9A71FD2397D0032B9E9 /* Accelerate.framework */; };
+		988F4B2C1FD3ADDB002A4EC8 /* Vision.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 988F4B2B1FD3ADD4002A4EC8 /* Vision.framework */; };
 		98A27E051FD187270004764F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A27E041FD187270004764F /* AppDelegate.m */; };
 		98A27E071FD187270004764F /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 98A27E061FD187270004764F /* art.scnassets */; };
 		98A27E0A1FD187270004764F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 98A27E091FD187270004764F /* ViewController.m */; };
@@ -24,15 +22,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		9863A99F1FD238400032B9E9 /* CIImage+MAT.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CIImage+MAT.h"; sourceTree = "<group>"; };
-		9863A9A01FD238400032B9E9 /* CIImage+MAT.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "CIImage+MAT.mm"; sourceTree = "<group>"; };
-		9863A9A31FD2397A0032B9E9 /* libdlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdlib.a; path = AmazingFace/lib/libdlib.a; sourceTree = "<group>"; };
 		9863A9A41FD2397A0032B9E9 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = AmazingFace/lib/opencv2.framework; sourceTree = "<group>"; };
 		9863A9A71FD2397D0032B9E9 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		9863A9A91FD2398A0032B9E9 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
-		9863A9AB1FD23AB30032B9E9 /* shape_predictor_68_face_landmarks.dat */ = {isa = PBXFileReference; lastKnownFileType = file; name = shape_predictor_68_face_landmarks.dat; path = AmazingFace/lib/shape_predictor_68_face_landmarks.dat; sourceTree = "<group>"; };
 		9863A9B01FD23EE80032B9E9 /* HeadPoseDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeadPoseDetector.h; sourceTree = "<group>"; };
 		9863A9B11FD23EE80032B9E9 /* HeadPoseDetector.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = HeadPoseDetector.mm; sourceTree = "<group>"; };
+		988F4B2B1FD3ADD4002A4EC8 /* Vision.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Vision.framework; path = System/Library/Frameworks/Vision.framework; sourceTree = SDKROOT; };
 		98A27E001FD187270004764F /* AmazingFace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmazingFace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98A27E031FD187270004764F /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		98A27E041FD187270004764F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -51,9 +46,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				988F4B2C1FD3ADDB002A4EC8 /* Vision.framework in Frameworks */,
 				9863A9B31FD2AE990032B9E9 /* Accelerate.framework in Frameworks */,
 				9863A9AA1FD239900032B9E9 /* CoreVideo.framework in Frameworks */,
-				9863A9A51FD2397A0032B9E9 /* libdlib.a in Frameworks */,
 				9863A9A61FD2397A0032B9E9 /* opencv2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,8 +59,6 @@
 		9863A99E1FD237F80032B9E9 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				9863A99F1FD238400032B9E9 /* CIImage+MAT.h */,
-				9863A9A01FD238400032B9E9 /* CIImage+MAT.mm */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -73,9 +66,9 @@
 		9863A9A21FD239790032B9E9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				988F4B2B1FD3ADD4002A4EC8 /* Vision.framework */,
 				9863A9A91FD2398A0032B9E9 /* CoreVideo.framework */,
 				9863A9A71FD2397D0032B9E9 /* Accelerate.framework */,
-				9863A9A31FD2397A0032B9E9 /* libdlib.a */,
 				9863A9A41FD2397A0032B9E9 /* opencv2.framework */,
 			);
 			name = Frameworks;
@@ -107,7 +100,6 @@
 		98A27DF71FD187270004764F = {
 			isa = PBXGroup;
 			children = (
-				9863A9AB1FD23AB30032B9E9 /* shape_predictor_68_face_landmarks.dat */,
 				98A27E021FD187270004764F /* AmazingFace */,
 				98A27E011FD187270004764F /* Products */,
 				9863A9A21FD239790032B9E9 /* Frameworks */,
@@ -201,7 +193,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9863A9AC1FD23AB30032B9E9 /* shape_predictor_68_face_landmarks.dat in Resources */,
 				98A27E071FD187270004764F /* art.scnassets in Resources */,
 				98A27E121FD187270004764F /* LaunchScreen.storyboard in Resources */,
 				98A27E0F1FD187270004764F /* Assets.xcassets in Resources */,
@@ -216,7 +207,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9863A9A11FD238400032B9E9 /* CIImage+MAT.mm in Sources */,
 				98A27E0A1FD187270004764F /* ViewController.m in Sources */,
 				98A27E151FD187270004764F /* main.m in Sources */,
 				9863A9B21FD23EE80032B9E9 /* HeadPoseDetector.mm in Sources */,
@@ -360,14 +350,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/AmazingFace/lib",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					DLIB_JPEG_SUPPORT,
-					DLIB_NO_GUI_SUPPORT,
-					NDEBUG,
-					DLIB_USE_BLAS,
-					DLIB_USE_LAPACK,
-					"YORKDEBUG=1",
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "YORKDEBUG=1";
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/AmazingFace/lib";
 				INFOPLIST_FILE = AmazingFace/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -391,13 +374,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/AmazingFace/lib",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					DLIB_JPEG_SUPPORT,
-					DLIB_NO_GUI_SUPPORT,
-					NDEBUG,
-					DLIB_USE_BLAS,
-					DLIB_USE_LAPACK,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/AmazingFace/lib";
 				INFOPLIST_FILE = AmazingFace/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

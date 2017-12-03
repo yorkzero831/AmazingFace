@@ -8,6 +8,9 @@
 
 #import "ViewController.h"
 #import "HeadPoseDetector.h"
+#import <Vision/Vision.h>
+#import <UIKit/UIKit.h>
+
 
 #define clamp(a) (a>255?255:(a<0?0:a))
 
@@ -21,10 +24,25 @@
     
 @implementation ViewController {
     HeadPoseDetector *headPosdetector;
+    VNDetectFaceRectanglesRequest *faceDetection;
+    VNDetectFaceLandmarksRequest *faceLandmarks;
+    VNSequenceRequestHandler *faceDatectionRequest;
+    VNSequenceRequestHandler *faceLandmarksRequest;
+    NSArray * detectionArray;
+    dispatch_queue_t faceDetecionQueue;
+    dispatch_queue_t landmarkCalQueue;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    faceDatectionRequest = [[VNSequenceRequestHandler alloc] init];
+    faceLandmarksRequest = [[VNSequenceRequestHandler alloc] init];
+    faceDetection = [[VNDetectFaceRectanglesRequest alloc] init];
+    faceLandmarks = [[VNDetectFaceLandmarksRequest alloc] init];
+    detectionArray = @[faceDetection];
+    faceDetecionQueue = dispatch_queue_create("com.AmazingFace.detectionQueue", nil);
+    landmarkCalQueue = dispatch_queue_create("com.AmazingFace.landmarkCalQueue", nil);
     
     headPosdetector = [[HeadPoseDetector alloc] init];
 
@@ -143,55 +161,34 @@
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
     CVPixelBufferRef buffer = [frame capturedImage];
     
-    CVPixelBufferLockBaseAddress(buffer, 0);
-    // it has two plane of yuv and cbcr
-    if (CVPixelBufferGetPlaneCount(buffer) < 2) {
-        return;
-    }
     
-    size_t width = CVPixelBufferGetWidth(buffer);
-    size_t height = CVPixelBufferGetHeight(buffer);
+    CIImage *ciimage = [CIImage imageWithCVPixelBuffer:buffer];
+    CIImage *newImage = [ciimage imageByApplyingOrientation:6];
+    dispatch_async(faceDetecionQueue, ^{
+         [self detectFace:newImage];
+    });
     
-    uint8_t *yBuffer = CVPixelBufferGetBaseAddressOfPlane(buffer, 0);
-    size_t yPitch = CVPixelBufferGetBytesPerRowOfPlane(buffer, 0);
-    
-    uint8_t *cbCrBuffer = CVPixelBufferGetBaseAddressOfPlane(buffer, 1);
-    size_t cbCrPitch = CVPixelBufferGetBytesPerRowOfPlane(buffer, 1);
-    
-    
-    int bytesPerPixel = 4;
-    uint8_t *rgbBuffer = malloc(height * width * bytesPerPixel);
-    
-    for(int yy = 0; yy < height; yy++) {
-        
-        uint8_t *yBufferLine = &yBuffer[yy * yPitch];
-        uint8_t *cbCrBufferLine = &cbCrBuffer[(yy >> 1) * cbCrPitch];
-        
-        for(int x = 0; x < width -1; x++) {
-            int16_t y = yBufferLine[x];
-            int16_t cb = cbCrBufferLine[x & ~1] - 128;
-            int16_t cr = cbCrBufferLine[x | 1] - 128;
-            
-            uint8_t *rgbOutput = &rgbBuffer[ ( (x + 1) * height - yy ) * bytesPerPixel];
-            
-            int16_t r = (int16_t)roundf( y + cr *  1.4 );
-            int16_t g = (int16_t)roundf( y + cb * -0.343 + cr * -0.711 );
-            int16_t b = (int16_t)roundf( y + cb *  1.765);
-            
-            rgbOutput[0] = 0xff;
-            rgbOutput[1] = clamp(b);
-            rgbOutput[2] = clamp(g);
-            rgbOutput[3] = clamp(r);
+}
 
+
+- (void) detectFace:(CIImage *)image {
+    if ([faceDatectionRequest performRequests:detectionArray onCIImage:image error:nil]) {
+        NSArray *faceArray = [faceDetection results];
+        if(faceArray.count != 0){
+            NSLog(@"GOT FACE");
+            [faceLandmarks setInputFaceObservations:faceArray];
+            [self detectLandmarks:image];
+            
         }
+       
     }
-    
-    //[headPosdetector doWorkOnPixelBuffer:rgbBuffer Heigth:height Width:width BytePerRow:cbCrPitch];
-    free(rgbBuffer);
+}
 
-    
-    CVPixelBufferUnlockBaseAddress(buffer, 0);
-    
+- (void) detectLandmarks:(CIImage *)image {
+    if ([faceLandmarksRequest performRequests:@[faceLandmarks] onCIImage:image error:nil]) {
+        NSArray *landmarksArray = [faceLandmarks results];
+        [headPosdetector doWorkOnLandmarkArrary:landmarksArray];
+    }
 }
 
 

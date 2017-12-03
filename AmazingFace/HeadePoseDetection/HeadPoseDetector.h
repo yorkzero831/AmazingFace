@@ -13,6 +13,5 @@
 
 @property (assign) BOOL prepared;
 
-- (void)doWorkOnPixelBuffer:(uint8_t *)buffer Heigth:(size_t)bufferHeight Width:(size_t)bufferWidth BytePerRow:(size_t)bytesPerRow;
-
+- (void)doWorkOnLandmarkArrary:(NSArray *)landmarksArray;
 @end
