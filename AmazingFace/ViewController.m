@@ -7,6 +7,13 @@
 //
 
 #import "ViewController.h"
+#import "HeadPoseDetector.h"
+#import <Vision/Vision.h>
+#import <UIKit/UIKit.h>
+
+
+#define clamp(a) (a>255?255:(a<0?0:a))
+
 
 @interface ViewController () <ARSCNViewDelegate, ARSessionDelegate>
 
@@ -15,10 +22,33 @@
 @end
 
     
-@implementation ViewController
+@implementation ViewController {
+    HeadPoseDetector *headPosdetector;
+    VNDetectFaceRectanglesRequest *faceDetection;
+    VNDetectFaceLandmarksRequest *faceLandmarks;
+    VNSequenceRequestHandler *faceDatectionRequest;
+    VNSequenceRequestHandler *faceLandmarksRequest;
+    NSArray * detectionArray;
+    dispatch_queue_t faceDetecionQueue;
+    dispatch_queue_t landmarkCalQueue;
+    
+    int frameIndex;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    faceDatectionRequest = [[VNSequenceRequestHandler alloc] init];
+    faceLandmarksRequest = [[VNSequenceRequestHandler alloc] init];
+    faceDetection = [[VNDetectFaceRectanglesRequest alloc] init];
+    faceLandmarks = [[VNDetectFaceLandmarksRequest alloc] init];
+    detectionArray = @[faceDetection];
+    faceDetecionQueue = dispatch_queue_create("com.AmazingFace.detectionQueue", nil);
+    landmarkCalQueue = dispatch_queue_create("com.AmazingFace.landmarkCalQueue", nil);
+    
+    headPosdetector = [[HeadPoseDetector alloc] init];
+    
+    frameIndex = 0;
 
     // Set the view's delegate
     self.sceneView.delegate = self;
@@ -85,6 +115,7 @@
     
     // Create a session configuration
     ARWorldTrackingConfiguration *configuration = [ARWorldTrackingConfiguration new];
+    
     //[configuration set]
 
     // Run the view's session
@@ -132,19 +163,43 @@
 }
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
-    CVPixelBufferRef cpbr = [frame capturedImage];
     
-    CIImage *ciImage = [CIImage imageWithCVPixelBuffer:cpbr];
+    //you dont need to caputre every frame
+    frameIndex = (frameIndex + 1)%3;
     
-    CIContext *temporaryContext = [CIContext contextWithOptions:nil];
-    CGImageRef videoImage = [temporaryContext
-                             createCGImage:ciImage
-                             fromRect:CGRectMake(0, 0,
-                                                 CVPixelBufferGetWidth(cpbr),
-                                                 CVPixelBufferGetHeight(cpbr))];
+    CVPixelBufferRef buffer = [frame capturedImage];
+    CIImage *ciimage = [CIImage imageWithCVPixelBuffer:buffer];
+    CIImage *newImage = [ciimage imageByApplyingOrientation:6];
     
-    UIImage *uiImage = [UIImage imageWithCGImage:videoImage];
-    CGImageRelease(videoImage);
+    if(frameIndex == 0)
+    dispatch_async(faceDetecionQueue, ^{
+        @autoreleasepool{
+           [self detectFace:newImage];
+        }
+    });
+    
 }
+
+
+- (void) detectFace:(CIImage *)image {
+    if ([faceDatectionRequest performRequests:detectionArray onCIImage:image error:nil]) {
+        NSArray *faceArray = [faceDetection results];
+        if(faceArray.count != 0){
+            NSLog(@"GOT FACE");
+            [faceLandmarks setInputFaceObservations:faceArray];
+            [self detectLandmarks:image];
+            
+        }
+       
+    }
+}
+
+- (void) detectLandmarks:(CIImage *)image {
+    if ([faceLandmarksRequest performRequests:@[faceLandmarks] onCIImage:image error:nil]) {
+        NSArray *landmarksArray = [faceLandmarks results];
+        [headPosdetector doWorkOnLandmarkArrary:landmarksArray];
+    }
+}
+
 
 @end
