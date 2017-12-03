@@ -31,6 +31,8 @@
     NSArray * detectionArray;
     dispatch_queue_t faceDetecionQueue;
     dispatch_queue_t landmarkCalQueue;
+    
+    int frameIndex;
 }
 
 - (void)viewDidLoad {
@@ -45,6 +47,8 @@
     landmarkCalQueue = dispatch_queue_create("com.AmazingFace.landmarkCalQueue", nil);
     
     headPosdetector = [[HeadPoseDetector alloc] init];
+    
+    frameIndex = 0;
 
     // Set the view's delegate
     self.sceneView.delegate = self;
@@ -159,13 +163,19 @@
 }
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
+    
+    //you dont need to caputre every frame
+    frameIndex = (frameIndex + 1)%3;
+    
     CVPixelBufferRef buffer = [frame capturedImage];
-    
-    
     CIImage *ciimage = [CIImage imageWithCVPixelBuffer:buffer];
     CIImage *newImage = [ciimage imageByApplyingOrientation:6];
+    
+    if(frameIndex == 0)
     dispatch_async(faceDetecionQueue, ^{
-         [self detectFace:newImage];
+        @autoreleasepool{
+           [self detectFace:newImage];
+        }
     });
     
 }
