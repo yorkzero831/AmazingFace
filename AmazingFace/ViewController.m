@@ -182,7 +182,7 @@
     matrix_float4x4 mat = [[frame camera] projectionMatrix];
 
     
-    if(frameIndex == 0)
+    //if(frameIndex == 0)
     dispatch_async(faceDetecionQueue, ^{
         @autoreleasepool{
            [self detectFace:newImage];
@@ -213,20 +213,22 @@
         VNFaceLandmarkRegion2D *allPoints = faceObservation.landmarks.allPoints;
         NSInteger pointCount = allPoints.pointCount;
         const CGPoint *point =  [allPoints pointsInImageOfSize:CGSizeMake(rect.size.width, rect.size.height)];
+        NSString *outS = @"";
         
-        NSArray* reslut = [self.sceneView hitTest:CGPointMake(point[8].x, point[8].y) types:ARHitTestResultTypeFeaturePoint];
-        NSArray* reslut1 = [self.sceneView hitTest:CGPointMake(point[20].x, point[20].y) types:ARHitTestResultTypeFeaturePoint];
-        NSArray* reslut2 = [self.sceneView hitTest:CGPointMake(point[29].x, point[29].y) types:ARHitTestResultTypeFeaturePoint];
-        NSArray* reslut3 = [self.sceneView hitTest:CGPointMake(point[30].x, point[30].y) types:ARHitTestResultTypeFeaturePoint];
+        
+        NSArray* reslut = [self.sceneView hitTest:CGPointMake(point[8].x, rect.size.height - point[8].y) types:ARHitTestResultTypeFeaturePoint];
+        NSArray* reslut1 = [self.sceneView hitTest:CGPointMake(point[20].x, rect.size.height - point[20].y) types:ARHitTestResultTypeFeaturePoint];
+        NSArray* reslut2 = [self.sceneView hitTest:CGPointMake(point[29].x, rect.size.height - point[29].y) types:ARHitTestResultTypeFeaturePoint];
+        NSArray* reslut3 = [self.sceneView hitTest:CGPointMake(point[30].x, rect.size.height - point[30].y) types:ARHitTestResultTypeFeaturePoint];
         if(reslut.count != 0){
-            //NSLog(@"get");
+            NSLog(@"get");
             ARHitTestResult *hitRes = [reslut objectAtIndex:0];
             SCNNode *node = [scene.rootNode childNodeWithName:@"face" recursively:YES];
             matrix_float4x4 transl = [hitRes worldTransform];
             
             [node setPosition:SCNVector3Make(transl.columns[3][0], transl.columns[3][1], transl.columns[3][2])];
             //[node setSimdWorldPosition:[hitRes localTransform]];
-            NSLog(@"Get %f, %f", point[8].x, point[8].y);
+            NSLog(@"Get %f, %f;   %f, %f", point[8].x, point[8].y, point[29].x, point[29].y);
             NSLog(@"pos %f, %f, %f", [node position].x, [node position].y, [node position].z);
         }
         

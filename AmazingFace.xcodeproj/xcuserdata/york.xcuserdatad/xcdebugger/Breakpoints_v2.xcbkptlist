@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.58482"
+            timestampString = "534094042.231634"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "73"
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.585124"
+            timestampString = "534094042.231696"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "106"
@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.585385"
+            timestampString = "534094042.231741"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "171"
@@ -192,7 +192,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.58568"
+            timestampString = "534094042.231849"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "195"
@@ -208,7 +208,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.585896"
+            timestampString = "534094042.231895"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "209"
@@ -224,7 +224,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.586094"
+            timestampString = "534094042.231939"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "185"
@@ -236,15 +236,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.586289"
+            timestampString = "534094042.23198"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "217"
-            endingLineNumber = "217"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
             landmarkName = "-detectLandmarks:"
             landmarkType = "7">
          </BreakpointContent>
@@ -256,11 +256,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.586484"
+            timestampString = "534094042.232021"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "225"
-            endingLineNumber = "225"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
             landmarkName = "-detectLandmarks:"
             landmarkType = "7">
          </BreakpointContent>
@@ -272,11 +272,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.586701"
+            timestampString = "534094042.232073"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
             landmarkName = "-detectLandmarks:"
             landmarkType = "7">
          </BreakpointContent>
@@ -288,11 +288,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.586897"
+            timestampString = "534094042.232114"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "229"
-            endingLineNumber = "229"
+            startingLineNumber = "231"
+            endingLineNumber = "231"
             landmarkName = "-detectLandmarks:"
             landmarkType = "7">
          </BreakpointContent>
@@ -304,7 +304,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.587165"
+            timestampString = "534094042.232155"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "215"
@@ -320,12 +320,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AmazingFace/ViewController.m"
-            timestampString = "534091674.58737"
+            timestampString = "534094042.232193"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "182"
             endingLineNumber = "182"
             landmarkName = "-session:didUpdateFrame:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "AmazingFace/ViewController.m"
+            timestampString = "534094042.232231"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
+            landmarkName = "-detectLandmarks:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
