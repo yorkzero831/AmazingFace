@@ -149,9 +149,11 @@ using namespace cv;
         cv::hconcat(rotation_mat, translation_vec, pose_mat);
         cv::decomposeProjectionMatrix(pose_mat, out_intrinsics, out_rotation, out_translation, cv::noArray(), cv::noArray(), cv::noArray(), euler_angle);
         
-        std::cout<< "X: " << std::setprecision(3) << euler_angle.at<double>(0) <<std::endl;
-        std::cout<< "Y: " << std::setprecision(3) << euler_angle.at<double>(1) <<std::endl;
-        std::cout<< "Z: " << std::setprecision(3) << euler_angle.at<double>(2) <<std::endl;
+        std::cout << "pose_mat = "<< std::endl << " "  << pose_mat << std::endl << std::endl;
+        
+//        std::cout<< "X: " << std::setprecision(3) << euler_angle.at<double>(0) <<std::endl;
+//        std::cout<< "Y: " << std::setprecision(3) << euler_angle.at<double>(1) <<std::endl;
+//        std::cout<< "Z: " << std::setprecision(3) << euler_angle.at<double>(2) <<std::endl;
         
     }
 }
