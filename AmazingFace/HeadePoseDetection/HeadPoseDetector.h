@@ -11,7 +11,16 @@
 
 @interface HeadPoseDetector : NSObject
 
++(instancetype) shareInstance ; 
+
 @property (assign) BOOL prepared;
 
-- (void)doWorkOnLandmarkArrary:(NSArray *)landmarksArray;
+- (void)doWorkOnLandmarkArrary:(NSArray *)landmarksArray CameraMatrix:(matrix_float3x3) camera_mat Buffer:(CVPixelBufferRef) buffer;
+
+- (SCNVector3) getTransformVector;
+
+- (SCNVector3) getEulerVector;
+
+- (SCNMatrix4) getTransformMatrix;
+
 @end

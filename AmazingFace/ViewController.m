@@ -23,6 +23,9 @@
 
     
 @implementation ViewController {
+    SCNScene *scene;
+    
+    
     HeadPoseDetector *headPosdetector;
     VNDetectFaceRectanglesRequest *faceDetection;
     VNDetectFaceLandmarksRequest *faceLandmarks;
@@ -31,6 +34,7 @@
     NSArray * detectionArray;
     dispatch_queue_t faceDetecionQueue;
     dispatch_queue_t landmarkCalQueue;
+    dispatch_queue_t modelRefreshQueue;
     
     int frameIndex;
 }
@@ -46,7 +50,7 @@
     faceDetecionQueue = dispatch_queue_create("com.AmazingFace.detectionQueue", nil);
     landmarkCalQueue = dispatch_queue_create("com.AmazingFace.landmarkCalQueue", nil);
     
-    headPosdetector = [[HeadPoseDetector alloc] init];
+    headPosdetector = [HeadPoseDetector shareInstance];
     
     frameIndex = 0;
 
@@ -59,7 +63,7 @@
     self.sceneView.showsStatistics = YES;
     
     // Create a new scene
-    SCNScene *scene = [SCNScene sceneNamed:@"art.scnassets/ship.scn"];
+    scene = [SCNScene sceneNamed:@"art.scnassets/ship.scn"];
     
     // Get Geometry from object
     SCNNode *node = [scene.rootNode childNodeWithName:@"ship" recursively:YES];
@@ -78,17 +82,17 @@
     float vectorData[dataLength];
     
     [vertex.data getBytes:&vectorData length: dataLength];
-    for (NSInteger i = 0; i < vectexCount; i ++) {
-        if(i % 10 == 0)
-        vectorData[i*3] += 10;
-        
-        // x
-        vectorData[i*3];
-        // y
-        vectorData[i*3 + 1];
-        // z
-        vectorData[i*3 + 2];
-    }
+//    for (NSInteger i = 0; i < vectexCount; i ++) {
+//        if(i % 10 == 0)
+//        vectorData[i*3] += 10;
+//        
+//        // x
+//        vectorData[i*3];
+//        // y
+//        vectorData[i*3 + 1];
+//        // z
+//        vectorData[i*3 + 2];
+//    }
     // create new data
     NSData *newData = [NSData dataWithBytes:&vectorData length:dataLength];
     
@@ -169,36 +173,76 @@
     
     CVPixelBufferRef buffer = [frame capturedImage];
     CIImage *ciimage = [CIImage imageWithCVPixelBuffer:buffer];
-    CIImage *newImage = [ciimage imageByApplyingOrientation:6];
+    CIImage *newImage = [ciimage imageByApplyingCGOrientation:kCGImagePropertyOrientationRight];
     
-    if(frameIndex == 0)
+    CVPixelBufferRef newBuffer = [newImage pixelBuffer];
+    
+    matrix_float3x3 camera_mat = [[frame camera] intrinsics];
+    matrix_float4x4 projectionMatrix = [[frame camera] projectionMatrix];
+    
+    //if(frameIndex == 0)
     dispatch_async(faceDetecionQueue, ^{
         @autoreleasepool{
-           [self detectFace:newImage];
+            [self detectFace:newImage :buffer : camera_mat];
         }
     });
+    
     
 }
 
 
-- (void) detectFace:(CIImage *)image {
+- (void) detectFace:(CIImage *)image :(CVPixelBufferRef) buffer :(matrix_float3x3) camera_mat {
     if ([faceDatectionRequest performRequests:detectionArray onCIImage:image error:nil]) {
         NSArray *faceArray = [faceDetection results];
         if(faceArray.count != 0){
             NSLog(@"GOT FACE");
             [faceLandmarks setInputFaceObservations:faceArray];
-            [self detectLandmarks:image];
-            
+            [self detectLandmarks:image :buffer :camera_mat];
+            [self updateModel];
         }
        
     }
 }
 
-- (void) detectLandmarks:(CIImage *)image {
+- (void) detectLandmarks:(CIImage *)image :(CVPixelBufferRef) buffer :(matrix_float3x3) camera_mat {
     if ([faceLandmarksRequest performRequests:@[faceLandmarks] onCIImage:image error:nil]) {
         NSArray *landmarksArray = [faceLandmarks results];
-        [headPosdetector doWorkOnLandmarkArrary:landmarksArray];
+        [headPosdetector doWorkOnLandmarkArrary:landmarksArray CameraMatrix:camera_mat Buffer:buffer];
     }
+}
+
+- (void) updateModel {
+    SCNNode *node = [scene.rootNode childNodeWithName:@"face" recursively:YES];
+    SCNVector3 tranVec = [headPosdetector getTransformVector];
+    SCNVector3 eulrVec = [headPosdetector getEulerVector];
+    SCNMatrix4 tranMat = [headPosdetector getTransformMatrix];
+    
+    matrix_float4x4 matrix = [[[self.sceneView.session currentFrame] camera] transform];
+    
+    double xxx = 1000;
+    tranVec.x /= 450;
+    tranVec.y = tranVec.y /450 - matrix.columns[3][1];
+    tranVec.z /= -450;
+    
+    
+    NSLog(@"A%f, %f, %f, %f", matrix.columns[3][0], matrix.columns[3][1], matrix.columns[3][2], matrix.columns[3][3]);
+    NSLog(@"B%f, %f, %f", tranVec.x, tranVec.y, tranVec.z);
+//
+//    //[node setEulerAngles:eulrVec];
+//    [node setPosition:tranVec];
+    
+    SCNMatrix4 ind =  SCNMatrix4Identity;
+    if(tranMat.m11 == 0){
+        tranMat = ind;
+    }
+    
+    [node setPosition:tranVec];
+    
+    //NSLog(@"%f, %f, %f", [node position].x, [node position].y, [node position].z);
+    
+    
+    
+    //[node setEulerAngles:(SCNVector3)];
 }
 
 

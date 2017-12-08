@@ -345,7 +345,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = J6V25V92SY;
+				DEVELOPMENT_TEAM = P5NMFQNK9W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AmazingFace/lib",
@@ -358,7 +358,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/AmazingFace/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = york.AmazingFace;
+				PRODUCT_BUNDLE_IDENTIFIER = york.AmazingFace1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -369,7 +369,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = J6V25V92SY;
+				DEVELOPMENT_TEAM = P5NMFQNK9W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AmazingFace/lib",
@@ -382,7 +382,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/AmazingFace/lib",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = york.AmazingFace;
+				PRODUCT_BUNDLE_IDENTIFIER = york.AmazingFace1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

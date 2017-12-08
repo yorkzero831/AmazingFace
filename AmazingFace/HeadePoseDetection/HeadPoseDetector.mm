@@ -6,7 +6,10 @@
 //  Copyright © 2017年 zero. All rights reserved.
 //
 #import <Vision/Vision.h>
+#import <SceneKit/SceneKit.h>
 #import "HeadPoseDetector.h"
+
+
 #include <iostream>
 #include <iomanip>
 #include <stdio.h>
@@ -35,14 +38,29 @@ using namespace cv;
     cv::Mat out_intrinsics;
     cv::Mat out_rotation;
     cv::Mat out_translation;
+    
+    SCNMatrix4 transformMatrix;
+    SCNVector3 translationVector;
+    SCNVector3 eulerVector;
+    
+    
 }
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        _prepared = NO;
-    }
-    return self;
+static  HeadPoseDetector* _instance = nil;
+
++(instancetype) shareInstance
+{
+    static dispatch_once_t onceToken ;
+    dispatch_once(&onceToken, ^{
+        _instance = [[self alloc] init] ;
+        [_instance initInstace];
+    }) ;
+    
+    return _instance ;
+}
+
+-(void) initInstace {
+    _prepared = NO;
 }
 
 - (void)prepare {
@@ -51,7 +69,23 @@ using namespace cv;
     [self prepareOpenCv];
 }
 
+- (SCNVector3) getTransformVector {
+    return translationVector;
+}
+
+- (SCNVector3) getEulerVector {
+    return eulerVector;
+}
+
+- (SCNMatrix4) getTransformMatrix {
+    return transformMatrix;
+}
+
 - (void)prepareOpenCv {
+    
+    translationVector = SCNVector3();
+    eulerVector = SCNVector3();
+    transformMatrix = SCNMatrix4Identity;
     
     float height = 720;
     float width = 1280;
@@ -101,13 +135,39 @@ using namespace cv;
     out_translation = cv::Mat(3, 1, CV_64FC1);
 }
 
-- (void)doWorkOnLandmarkArrary:(NSArray *)landmarksArray {
+- (void)doWorkOnLandmarkArrary:(NSArray *)landmarksArray CameraMatrix:(matrix_float3x3) camera_mat Buffer:(CVPixelBufferRef) buffer{
     
     if (!self.prepared) {
         [self prepare];
     }
     //return when no face detected
     if (landmarksArray.count == 0) return;
+    
+    CVPixelBufferLockBaseAddress(buffer, 0);
+    cv::Mat mat;
+    void *address =  CVPixelBufferGetBaseAddressOfPlane(buffer, 0);
+    int bufferWidth = (int)CVPixelBufferGetWidthOfPlane(buffer,0);
+    int bufferHeight = (int)CVPixelBufferGetHeightOfPlane(buffer, 0);
+    int bytePerRow = (int)CVPixelBufferGetBytesPerRowOfPlane(buffer, 0);
+    mat = cv::Mat(bufferHeight, bufferWidth, CV_8UC1, address, bytePerRow);
+    //Rotate the frame we receive
+    cv::Mat rotated;
+    cv::transpose(mat, rotated);
+    cv::flip(rotated, rotated,1);
+    
+    circle(rotated, cv::Point(150 ,100), 20, cv::Scalar(0, 0, 0), -1);
+    
+    CVPixelBufferUnlockBaseAddress(buffer, 0);
+    
+    
+    
+    
+    cv::Mat arkitCam_martix = (cv::Mat_<double>(3,3) <<
+                               camera_mat.columns[0][0], camera_mat.columns[0][1], camera_mat.columns[0][2],
+                               camera_mat.columns[1][0] , camera_mat.columns[1][1], camera_mat.columns[1][2],
+                               camera_mat.columns[2][0], camera_mat.columns[2][1], camera_mat.columns[2][2]);
+    
+    std::cout << "cam_matrix = "<< std::endl << " "  << arkitCam_martix << std::endl << std::endl;
     
     for (int i = 0; i < landmarksArray.count; i++) {
         VNFaceObservation *faceObservation = [landmarksArray objectAtIndex:i];
@@ -138,6 +198,8 @@ using namespace cv;
         cv::Mat pose_mat = cv::Mat(3, 4, CV_64FC1);     //3 x 4 R | T
         cv::Mat euler_angle = cv::Mat(3, 1, CV_64FC1);
         
+        
+        
         //calc pos
         cv::solvePnP(object_pts, image_pts, cam_matrix, dist_coeffs, rotation_vec, translation_vec);
         
@@ -149,9 +211,38 @@ using namespace cv;
         cv::hconcat(rotation_mat, translation_vec, pose_mat);
         cv::decomposeProjectionMatrix(pose_mat, out_intrinsics, out_rotation, out_translation, cv::noArray(), cv::noArray(), cv::noArray(), euler_angle);
         
-        std::cout<< "X: " << std::setprecision(3) << euler_angle.at<double>(0) <<std::endl;
-        std::cout<< "Y: " << std::setprecision(3) << euler_angle.at<double>(1) <<std::endl;
-        std::cout<< "Z: " << std::setprecision(3) << euler_angle.at<double>(2) <<std::endl;
+//        std::cout<< "X: " << std::setprecision(3) << euler_angle.at<double>(0) <<std::endl;
+//        std::cout<< "Y: " << std::setprecision(3) << euler_angle.at<double>(1) <<std::endl;
+//        std::cout<< "Z: " << std::setprecision(3) << euler_angle.at<double>(2) <<std::endl;
+        
+        //std::cout << "pos = "  << reprojectdst[0].x <<" " << reprojectdst[0].y << std::endl;
+        
+        //std::cout << "translation_vec = "<< std::endl << " "  << translation_vec << std::endl << std::endl;
+        //std::cout << "rotation_mat = "<< std::endl << " "  << rotation_mat << std::endl << std::endl;
+        
+        translationVector.x = translation_vec.at<double>(0);
+        translationVector.y = translation_vec.at<double>(1);
+        translationVector.z = translation_vec.at<double>(2);
+//        eulerVector.x = euler_angle.at<double>(0);
+//        eulerVector.y = euler_angle.at<double>(1);
+//        eulerVector.z = euler_angle.at<double>(2);
+        
+//        transformMatrix.m11 = rotation_mat.at<double>(0, 0);
+//        transformMatrix.m12 = rotation_mat.at<double>(0, 1);
+//        transformMatrix.m13 = rotation_mat.at<double>(0, 2);
+//        transformMatrix.m14 = translation_vec.at<double>(0);  //transform
+//        transformMatrix.m21 = rotation_mat.at<double>(1, 0);
+//        transformMatrix.m22 = rotation_mat.at<double>(1, 1);
+//        transformMatrix.m23 = rotation_mat.at<double>(1, 2);
+//        transformMatrix.m24 = translation_vec.at<double>(1);  //transform
+//        transformMatrix.m31 = rotation_mat.at<double>(2, 0);
+//        transformMatrix.m32 = rotation_mat.at<double>(2, 1);
+//        transformMatrix.m33 = rotation_mat.at<double>(2, 2);
+//        transformMatrix.m34 = translation_vec.at<double>(2);  //transform
+//        transformMatrix.m41 = 0.0;
+//        transformMatrix.m42 = 0.0;
+//        transformMatrix.m43 = 0.0;
+//        transformMatrix.m44 = 1;
         
     }
 }
